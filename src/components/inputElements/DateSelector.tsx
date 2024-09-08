@@ -1,19 +1,24 @@
-
-import { useFormContext } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 interface DateSelectorProps {
     name: string;
-    label: string;
-}
+};
 
-export default function DateSelector({ name, label }: DateSelectorProps) {
-    const { register, formState: { errors } } = useFormContext();
+export default function DateSelector({ name }: DateSelectorProps) {
+    const { register, formState: { errors } } = useForm();
 
-    return (
-        <div>
-            <label htmlFor={name}>{label}</label>
-            <input type="date" id={name} {...register(name)} />
-            {errors[name] && <p>{errors[name]?.message as string}</p>}
-        </div>
-    )
+    return <>
+        <input
+            type='date'
+            {...register(name)}
+            id={name}
+            className={`p-2 rounded-lg focus:outline-none ${errors[name] ? 'border-red-500' : ''}`}
+        />
+        {errors[name] && (
+            <>
+                {errors[name]?.message && <span className='text-red-500'>{errors[name]?.message as string}</span>}
+
+            </>
+        )}
+    </>
 };
