@@ -41,8 +41,8 @@ export default function PersonalDetails({ firstName, middleName, lastName, phone
 
                 <div className='flex flex-col gap-2 max-sm:w-full'>
                     <label htmlFor="" className='text-2xl'>Date</label>
-                    <input onChange={e => updateFields({birthDate: e.target.value})} type='date' value={birthDate} className='p-3 rounded-lg' />
-                    {/* <DateSelector name='birthDate' value={birthDate} /> */}
+                    {/* <input onChange={e => updateFields({birthDate: e.target.value})} type='date' value={birthDate} className='p-3 rounded-lg' /> */}
+                    <DateSelector date='date' onChange={(date) => updateFields({birthDate: date || ''})} value={birthDate} />
                 </div>
 
             </div>

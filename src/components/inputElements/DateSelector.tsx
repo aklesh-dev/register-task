@@ -1,24 +1,40 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import React from 'react';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
-interface DateSelectorProps {
-    name: string;
+const schema = z.object({
+    date: z.string().date(),
+})
+
+type DateSelectorProps = z.infer<typeof schema>
+
+interface DateSelectorPropsWithHandlers extends DateSelectorProps {
+    onChange?: (date: string | null) => void;
+    value?: string;
 };
 
-export default function DateSelector({ name }: DateSelectorProps) {
-    const { register, formState: { errors } } = useForm();
+export default function DateSelector({onChange, value}: DateSelectorPropsWithHandlers) {
+    const { register, formState: { errors } } = useForm<DateSelectorProps>({
+        resolver: zodResolver(schema),
+        defaultValues: { date: value || undefined},
+    });
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const value = event.target.value;        
+        onChange?.(value);
+    }
 
     return <>
-        <input
-            type='date'
-            {...register(name)}
-            id={name}
-            className={`p-2 rounded-lg focus:outline-none ${errors[name] ? 'border-red-500' : ''}`}
-        />
-        {errors[name] && (
-            <>
-                {errors[name]?.message && <span className='text-red-500'>{errors[name]?.message as string}</span>}
-
-            </>
-        )}
+        <div className="">
+            <input
+                type='date'
+                {...register("date", { required: "Date is required!" })}
+                value={value || ''}
+                onChange={handleChange}
+                className={`p-2 rounded-lg focus:outline-none ${errors.date ? 'border-red-500' : ''}`}
+            />
+            {errors.date && <div className='text-red-500'>{errors.date.message}</div>}
+        </div>
     </>
 };
